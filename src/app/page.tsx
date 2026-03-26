@@ -5,11 +5,10 @@ import { generateSummary } from "@/lib/summary";
 import Header from "@/components/Header";
 import RatingHero from "@/components/RatingHero";
 import Summary from "@/components/Summary";
-import Forecast from "@/components/Forecast";
+import ForecastWithSpots from "@/components/ForecastWithSpots";
 import CurrentConditions from "@/components/CurrentConditions";
 import TideChart from "@/components/TideChart";
 import WetsuitBar from "@/components/WetsuitBar";
-import SpotRecommendations from "@/components/SpotRecommendations";
 
 export const dynamic = "force-dynamic";
 
@@ -63,15 +62,13 @@ export default async function Home() {
         topSpot={rankedSpots[0] ?? null}
       />
       <Summary text={summaryText} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
-        <Forecast days={days} bestWindow={bestWindow} />
+      <ForecastWithSpots days={days} bestWindow={bestWindow} tidePoints={tidePoints}>
         <div className="flex flex-col gap-3.5">
           <CurrentConditions buoy={buoy} />
           <TideChart tidePoints={tidePoints} hourlyTide={hourlyTide} />
         </div>
-      </div>
+      </ForecastWithSpots>
       <WetsuitBar waterTempF={buoy?.waterTempF ?? null} />
-      <SpotRecommendations spots={rankedSpots} bestWindow={bestWindow} />
       <footer className="text-center py-6 mt-2 text-[11px] text-text-muted leading-relaxed font-medium">
         Data: NDBC Buoy 44007 · Open-Meteo Marine · NOAA CO-OPS<br />
         Forecast updates on page refresh
