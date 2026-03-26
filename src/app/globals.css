@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #2a9d8f;
+  --primary-light: #5fbcb0;
+  --primary-bg: #e8f5f2;
+  --accent: #e8a838;
+  --accent-bg: #fdf3dd;
+  --poor: #d97042;
+  --poor-bg: #fde8dc;
+  --flat: #b8ad9e;
+  --flat-bg: #f0ece6;
+  --bg: #faf6ef;
+  --card: #ffffff;
+  --card-border: #e8dfd0;
+  --surface: #f5f1e8;
+  --text: #2d2a24;
+  --text-secondary: #7a7062;
+  --text-muted: #9a8e7e;
+}
+
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-bg: var(--primary-bg);
+  --color-accent: var(--accent);
+  --color-accent-bg: var(--accent-bg);
+  --color-poor: var(--poor);
+  --color-poor-bg: var(--poor-bg);
+  --color-flat: var(--flat);
+  --color-flat-bg: var(--flat-bg);
+  --color-bg: var(--bg);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --font-sans: var(--font-quicksand);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
