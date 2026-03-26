@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import type { TidePoint, HourlyTide } from "@/lib/types";
 import { formatTime } from "@/lib/utils";
 
@@ -10,6 +11,8 @@ export default function TideChart({
   tidePoints: TidePoint[] | null;
   hourlyTide: HourlyTide[] | null;
 }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   if (!hourlyTide || hourlyTide.length === 0) {
     return (
       <div className="bg-card border border-card-border rounded-[14px] px-5 py-[18px] shadow-[0_1px_4px_rgba(0,0,0,0.03)] flex-1">
@@ -45,23 +48,26 @@ export default function TideChart({
     points.map((p) => `L${p.x},${p.y}`).join(" ") +
     ` L${points[points.length - 1].x},${svgH} Z`;
 
-  // NOW marker position
-  const now = new Date();
-  const startTime = new Date(hourlyTide[0].time).getTime();
-  const endTime = new Date(hourlyTide[hourlyTide.length - 1].time).getTime();
-  const totalSpan = endTime - startTime || 1;
-  const nowFrac = Math.max(0, Math.min(1, (now.getTime() - startTime) / totalSpan));
-  const nowX = nowFrac * svgW;
+  // NOW marker position — only computed on client to avoid hydration mismatch
+  let nowX: number | null = null;
+  let nowY: number | null = null;
+  if (mounted) {
+    const now = new Date();
+    const startTime = new Date(hourlyTide[0].time).getTime();
+    const endTime = new Date(hourlyTide[hourlyTide.length - 1].time).getTime();
+    const totalSpan = endTime - startTime || 1;
+    const nowFrac = Math.max(0, Math.min(1, (now.getTime() - startTime) / totalSpan));
+    nowX = nowFrac * svgW;
 
-  // Interpolate Y at nowX
-  const nowIdx = nowFrac * (hourlyTide.length - 1);
-  const lo = Math.floor(nowIdx);
-  const hi = Math.min(lo + 1, hourlyTide.length - 1);
-  const frac = nowIdx - lo;
-  const nowY = points[lo].y + (points[hi].y - points[lo].y) * frac;
+    const nowIdx = nowFrac * (hourlyTide.length - 1);
+    const lo = Math.floor(nowIdx);
+    const hi = Math.min(lo + 1, hourlyTide.length - 1);
+    const frac = nowIdx - lo;
+    nowY = points[lo].y + (points[hi].y - points[lo].y) * frac;
+  }
 
   // Filter tide points to today only
-  const todayStr = now.toISOString().split("T")[0];
+  const todayStr = new Date().toISOString().split("T")[0];
   const todayTides = tidePoints?.filter(
     (tp) => tp.time.split("T")[0] === todayStr
   ) ?? [];
@@ -92,29 +98,33 @@ export default function TideChart({
           strokeLinecap="round"
           strokeLinejoin="round"
         />
-        {/* NOW marker */}
-        <line
-          x1={nowX}
-          y1={0}
-          x2={nowX}
-          y2={svgH}
-          stroke="#2d2a24"
-          strokeWidth="1"
-          strokeDasharray="4,4"
-          opacity="0.15"
-        />
-        <circle cx={nowX} cy={nowY} r="5" fill="#2a9d8f" />
-        <text
-          x={nowX + 8}
-          y={nowY - 3}
-          fill="#2d2a24"
-          fontSize="10"
-          fontFamily="Quicksand, sans-serif"
-          fontWeight="600"
-          opacity="0.5"
-        >
-          NOW
-        </text>
+        {/* NOW marker — client-only to avoid hydration mismatch */}
+        {nowX !== null && nowY !== null && (
+          <>
+            <line
+              x1={nowX}
+              y1={0}
+              x2={nowX}
+              y2={svgH}
+              stroke="#2d2a24"
+              strokeWidth="1"
+              strokeDasharray="4,4"
+              opacity="0.15"
+            />
+            <circle cx={nowX} cy={nowY} r="5" fill="#2a9d8f" />
+            <text
+              x={nowX + 8}
+              y={nowY - 3}
+              fill="#2d2a24"
+              fontSize="10"
+              fontFamily="Quicksand, sans-serif"
+              fontWeight="600"
+              opacity="0.5"
+            >
+              NOW
+            </text>
+          </>
+        )}
       </svg>
 
       {todayTides.length > 0 && (
