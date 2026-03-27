@@ -71,8 +71,12 @@ export default async function Home() {
           bestWindow ? `Wind: ${bestWindow.windSpeedMph}mph ${compassDir(bestWindow.windDirDeg)} — ${windQuality(bestWindow.windDirDeg, bestWindow.windSpeedMph)}` : "Wind: No data",
           `Water: ${buoy?.waterTempF ?? "?"}°F`,
           bestWindow ? `Best window: ${bestWindow.dayLabel} ${bestWindow.timeLabel}` : "Best window: None",
-          rankedSpots[0] ? `Best spot: ${rankedSpots[0].name} (${rankedSpots[0].driveTime})` : "Best spot: Unknown",
           `Wetsuit: ${wetsuitRec(buoy?.waterTempF ?? null)}`,
+          "",
+          "Top 3 spots (ranked):",
+          ...rankedSpots.slice(0, 3).map((s, i) =>
+            `${i + 1}. ${s.name} (${s.driveTime}) — ${s.conditionText}${s.rideable ? "" : " [NOT RIDEABLE]"}`
+          ),
         ].join("\n")}
       />
       <ForecastWithSpots days={days} bestWindow={bestWindow} tidePoints={tidePoints}>
