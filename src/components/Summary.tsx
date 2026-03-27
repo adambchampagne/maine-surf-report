@@ -51,7 +51,11 @@ export default function Summary({
             </span>
           </div>
         ) : (
-          displayText
+          <div className="space-y-2">
+            {displayText.split("\n").filter(Boolean).map((line, i) => (
+              <p key={i}>{line}</p>
+            ))}
+          </div>
         )}
       </div>
 
