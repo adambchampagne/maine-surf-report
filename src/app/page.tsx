@@ -2,6 +2,8 @@ import { fetchMarineForecast, fetchWindForecast, fetchBuoyData, fetchTidePoints,
 import { calcRating, buildDayForecasts, findBestWindow } from "@/lib/ratings";
 import { rankSpots } from "@/lib/spots";
 import { generateSummary } from "@/lib/summary";
+import { windQuality } from "@/lib/ratings";
+import { compassDir, wetsuitRec } from "@/lib/utils";
 import Header from "@/components/Header";
 import RatingHero from "@/components/RatingHero";
 import Summary from "@/components/Summary";
@@ -60,7 +62,19 @@ export default async function Home() {
         bestWindow={bestWindow}
         topSpot={rankedSpots[0] ?? null}
       />
-      <Summary text={summaryText} waterTempF={buoy?.waterTempF ?? null} />
+      <Summary
+        text={summaryText}
+        waterTempF={buoy?.waterTempF ?? null}
+        conditions={[
+          `Current rating: ${currentCalc.rating}`,
+          bestWindow ? `Swell: ${bestWindow.swellHeightFt}ft @ ${bestWindow.swellPeriodS}s from ${compassDir(bestWindow.swellDirDeg)}` : "Swell: No data",
+          bestWindow ? `Wind: ${bestWindow.windSpeedMph}mph ${compassDir(bestWindow.windDirDeg)} — ${windQuality(bestWindow.windDirDeg, bestWindow.windSpeedMph)}` : "Wind: No data",
+          `Water: ${buoy?.waterTempF ?? "?"}°F`,
+          bestWindow ? `Best window: ${bestWindow.dayLabel} ${bestWindow.timeLabel}` : "Best window: None",
+          rankedSpots[0] ? `Best spot: ${rankedSpots[0].name} (${rankedSpots[0].driveTime})` : "Best spot: Unknown",
+          `Wetsuit: ${wetsuitRec(buoy?.waterTempF ?? null)}`,
+        ].join("\n")}
+      />
       <ForecastWithSpots days={days} bestWindow={bestWindow} tidePoints={tidePoints}>
         <div className="flex flex-col gap-3.5">
           <CurrentConditions buoy={buoy} />
