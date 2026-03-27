@@ -8,7 +8,6 @@ import Summary from "@/components/Summary";
 import ForecastWithSpots from "@/components/ForecastWithSpots";
 import CurrentConditions from "@/components/CurrentConditions";
 import TideChart from "@/components/TideChart";
-import WetsuitBar from "@/components/WetsuitBar";
 
 export const dynamic = "force-dynamic";
 
@@ -61,14 +60,14 @@ export default async function Home() {
         bestWindow={bestWindow}
         topSpot={rankedSpots[0] ?? null}
       />
-      <Summary text={summaryText} />
+      <Summary text={summaryText} waterTempF={buoy?.waterTempF ?? null} />
       <ForecastWithSpots days={days} bestWindow={bestWindow} tidePoints={tidePoints}>
         <div className="flex flex-col gap-3.5">
           <CurrentConditions buoy={buoy} />
           <TideChart tidePoints={tidePoints} hourlyTide={hourlyTide} />
         </div>
       </ForecastWithSpots>
-      <WetsuitBar waterTempF={buoy?.waterTempF ?? null} />
+
       <footer className="text-center py-6 mt-2 text-[11px] text-text-muted leading-relaxed font-medium">
         Data: NDBC Buoy 44007 · Open-Meteo Marine · NOAA CO-OPS<br />
         Forecast updates on page refresh
