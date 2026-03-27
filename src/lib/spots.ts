@@ -77,15 +77,19 @@ export function rankSpots(bestSlot: ForecastSlot | null, tidePoints?: TidePoint[
       conditionText = `${ht}ft @ ${per}s — rideable but swell/wind direction not ideal`;
     }
 
-    // Tags
-    let tag: string | null = null;
-    if (rideable && score >= 4) tag = "★ Best Pick";
-    else if (rideable && score >= 3 && spot.driveMinutes <= 20) tag = "Close & Clean";
-
-    return { ...spot, score, rideable, conditionText, tag };
+    return { ...spot, score, rideable, conditionText, tag: null };
   }).sort((a, b) => {
     if (a.rideable !== b.rideable) return a.rideable ? -1 : 1;
     if (a.score !== b.score) return b.score - a.score;
     return a.driveMinutes - b.driveMinutes;
+  }).map((spot, i, sorted) => {
+    // Only tag the top spot as Best Pick, and a close runner-up as Close & Clean
+    let tag: string | null = null;
+    if (i === 0 && spot.rideable) {
+      tag = "★ Best Pick";
+    } else if (i === 1 && spot.rideable && spot.driveMinutes <= 20 && spot.score >= sorted[0].score - 1) {
+      tag = "Close & Clean";
+    }
+    return { ...spot, tag };
   });
 }
