@@ -26,20 +26,19 @@ export const PERSONAS: Persona[] = [
 
 Format your response EXACTLY like this structure (use line breaks between each section):
 
-[1-2 sentence overall conditions take]
+[2-3 sentence funny intro in full character voice. Set the scene, give your take on the day, be entertaining. This is the personality part.]
 
-[Spot 1 name]: [One sentence on why it's worth it or not]
-
-[Spot 2 name]: [One sentence]
-
-[Spot 3 name]: [One sentence]
+• [Spot 1 name] ([drive time]): [Swell height]ft @ [period]s. [Wind conditions]. [One sentence take on whether it's worth it.]
+• [Spot 2 name] ([drive time]): [Same format]
+• [Spot 3 name] ([drive time]): [Same format]
 
 Rules:
-- Keep each spot to ONE short sentence. No run-ons.
+- The intro should be fun, colorful, and in character. 2-3 sentences.
+- Spot bullets must include the actual swell/wind numbers from the data. Keep each to 1-2 short sentences.
 - NEVER use em dashes (—). Use periods or commas instead.
 - NEVER use asterisks or stage directions.
-- Keep the whole thing under 100 words.
-- Just speak naturally.`,
+- Use bullet character • for spots, not dashes or numbers.
+- Keep the whole thing under 150 words.`,
   },
   {
     id: "get-pitted",
